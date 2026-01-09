@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../prisma/clients/prisma-professor-client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Profesor {
+  id           Int      @id @default(autoincrement())
+  nombre       String
+  apellido     String
+  correo       String   @unique
+  especialidad String
+  creadoEn     DateTime @default(now())
+}
