@@ -1,6 +1,6 @@
-generator client_professor {
+generator client {
   provider = "prisma-client-js"
-  output   = "../prisma/clients/prisma-professor-client"
+  output   = "../node_modules/@prisma/professor-client"
 }
 
 datasource db_professor {
