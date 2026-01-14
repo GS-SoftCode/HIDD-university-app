@@ -1,9 +1,9 @@
-generator client {
+generator client_professor {
   provider = "prisma-client-js"
   output   = "../prisma/clients/prisma-professor-client"
 }
 
-datasource db {
+datasource db_professor {
   provider = "postgresql"
 }
 

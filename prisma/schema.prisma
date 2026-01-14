@@ -5,7 +5,6 @@ generator client_main {
 
 datasource db_main {
   provider = "postgresql"
-  
 }
 
 model Carrera {

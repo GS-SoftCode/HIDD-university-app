@@ -39,12 +39,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.1.0
- * Query Engine version: ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba
+ * Prisma Client JS version: 7.2.0
+ * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
  */
 Prisma.prismaVersion = {
-  client: "7.1.0",
-  engine: "ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba"
+  client: "7.2.0",
+  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -120,10 +120,10 @@ exports.Prisma.ModelName = {
  */
 const config = {
   "previewFeatures": [],
-  "clientVersion": "7.1.0",
-  "engineVersion": "ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba",
+  "clientVersion": "7.2.0",
+  "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../prisma/clients/prisma-professor-client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Profesor {\n  id           Int      @id @default(autoincrement())\n  nombre       String\n  apellido     String\n  correo       String   @unique\n  especialidad String\n  creadoEn     DateTime @default(now())\n}\n"
+  "inlineSchema": "generator client_professor {\n  provider = \"prisma-client-js\"\n  output   = \"../prisma/clients/prisma-professor-client\"\n}\n\ndatasource db_professor {\n  provider = \"postgresql\"\n}\n\nmodel Profesor {\n  id           Int      @id @default(autoincrement())\n  nombre       String\n  apellido     String\n  correo       String   @unique\n  especialidad String\n  creadoEn     DateTime @default(now())\n}\n"
 }
 
 config.runtimeDataModel = JSON.parse("{\"models\":{\"Profesor\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nombre\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apellido\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"correo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"especialidad\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"creadoEn\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")

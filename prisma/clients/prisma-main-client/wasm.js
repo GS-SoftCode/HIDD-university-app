@@ -19,10 +19,7 @@ const {
   skip,
   Decimal,
   Debug,
-  DbNull,
-  JsonNull,
-  AnyNull,
-  NullTypes,
+  objectEnumValues,
   makeStrictEnum,
   Extensions,
   warnOnce,
@@ -30,7 +27,7 @@ const {
   Public,
   getRuntime,
   createParam,
-} = require('./runtime/wasm-compiler-edge.js')
+} = require('./runtime/wasm-engine-edge.js')
 
 
 const Prisma = {}
@@ -39,12 +36,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.2.0
- * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+ * Prisma Client JS version: 6.19.2
+ * Query Engine version: c2990dca591cba766e3b7ef5d9e8a84796e47ab7
  */
 Prisma.prismaVersion = {
-  client: "7.2.0",
-  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
+  client: "6.19.2",
+  engine: "c2990dca591cba766e3b7ef5d9e8a84796e47ab7"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -72,11 +69,15 @@ Prisma.defineExtension = Extensions.defineExtension
 /**
  * Shorthand utilities for JSON filtering
  */
-Prisma.DbNull = DbNull
-Prisma.JsonNull = JsonNull
-Prisma.AnyNull = AnyNull
+Prisma.DbNull = objectEnumValues.instances.DbNull
+Prisma.JsonNull = objectEnumValues.instances.JsonNull
+Prisma.AnyNull = objectEnumValues.instances.AnyNull
 
-Prisma.NullTypes = NullTypes
+Prisma.NullTypes = {
+  DbNull: objectEnumValues.classes.DbNull,
+  JsonNull: objectEnumValues.classes.JsonNull,
+  AnyNull: objectEnumValues.classes.AnyNull
+}
 
 
 
@@ -167,27 +168,79 @@ exports.Prisma.ModelName = {
  * Create the Client
  */
 const config = {
-  "previewFeatures": [],
-  "clientVersion": "7.2.0",
-  "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
+  "generator": {
+    "name": "client_main",
+    "provider": {
+      "fromEnvVar": null,
+      "value": "prisma-client-js"
+    },
+    "output": {
+      "value": "A:\\ITS 3\\HIDD\\M2-TC4\\university-app\\prisma\\clients\\prisma-main-client",
+      "fromEnvVar": null
+    },
+    "config": {
+      "engineType": "library"
+    },
+    "binaryTargets": [
+      {
+        "fromEnvVar": null,
+        "value": "windows",
+        "native": true
+      }
+    ],
+    "previewFeatures": [],
+    "sourceFilePath": "A:\\ITS 3\\HIDD\\M2-TC4\\university-app\\prisma\\schema.prisma",
+    "isCustomOutput": true
+  },
+  "relativeEnvPaths": {
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../../.env"
+  },
+  "relativePath": "../..",
+  "clientVersion": "6.19.2",
+  "engineVersion": "c2990dca591cba766e3b7ef5d9e8a84796e47ab7",
+  "datasourceNames": [
+    "db_main"
+  ],
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client_main {\n  provider = \"prisma-client-js\"\n  output   = \"../prisma/clients/prisma-main-client\"\n}\n\ndatasource db_main {\n  provider = \"postgresql\"\n}\n\nmodel Carrera {\n  id_carrera Int    @id @default(autoincrement())\n  nombre     String\n  duracion   Int\n  facultad   String\n\n  ciclos      Ciclo[]\n  estudiantes Estudiante[]\n}\n\nmodel Ciclo {\n  id_ciclo   Int    @id @default(autoincrement())\n  nombre     String\n  numero     Int\n  id_carrera Int\n\n  carrera  Carrera   @relation(fields: [id_carrera], references: [id_carrera])\n  materias Materia[]\n}\n\nmodel Materia {\n  id_materia Int    @id @default(autoincrement())\n  nombre     String\n  codigo     String @unique\n  creditos   Int\n  id_ciclo   Int\n\n  ciclo       Ciclo                @relation(fields: [id_ciclo], references: [id_ciclo])\n  docentes    Docente_Materia[]\n  estudiantes Estudiante_Materia[]\n}\n\nmodel Estudiante {\n  id_estudiante    Int      @id @default(autoincrement())\n  nombre           String\n  apellido         String\n  correo           String   @unique\n  password         String\n  fecha_nacimiento DateTime\n  id_carrera       Int\n\n  carrera  Carrera              @relation(fields: [id_carrera], references: [id_carrera])\n  materias Estudiante_Materia[]\n}\n\nmodel Docente {\n  id_docente   Int    @id @default(autoincrement())\n  nombre       String\n  apellido     String\n  correo       String @unique\n  especialidad String\n\n  materias Docente_Materia[]\n}\n\nmodel Docente_Materia {\n  id_docente Int\n  id_materia Int\n\n  docente Docente @relation(fields: [id_docente], references: [id_docente])\n  materia Materia @relation(fields: [id_materia], references: [id_materia])\n\n  @@id([id_docente, id_materia])\n}\n\nmodel Estudiante_Materia {\n  id_estudiante     Int\n  id_materia        Int\n  fecha_inscripcion DateTime\n\n  estudiante Estudiante @relation(fields: [id_estudiante], references: [id_estudiante])\n  materia    Materia    @relation(fields: [id_materia], references: [id_materia])\n\n  @@id([id_estudiante, id_materia])\n}\n"
+  "postinstall": false,
+  "inlineDatasources": {
+    "db_main": {
+      "url": {
+        "fromEnvVar": "DATABASE_URL",
+        "value": null
+      }
+    }
+  },
+  "inlineSchema": "generator client_main {\n  provider = \"prisma-client-js\"\n  output   = \"../prisma/clients/prisma-main-client\"\n}\n\ndatasource db_main {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Carrera {\n  id_carrera Int    @id @default(autoincrement())\n  nombre     String\n  duracion   Int\n  facultad   String\n\n  ciclos      Ciclo[]\n  estudiantes Estudiante[]\n}\n\nmodel Ciclo {\n  id_ciclo   Int    @id @default(autoincrement())\n  nombre     String\n  numero     Int\n  id_carrera Int\n\n  carrera  Carrera   @relation(fields: [id_carrera], references: [id_carrera])\n  materias Materia[]\n}\n\nmodel Materia {\n  id_materia Int    @id @default(autoincrement())\n  nombre     String\n  codigo     String @unique\n  creditos   Int\n  id_ciclo   Int\n\n  ciclo       Ciclo                @relation(fields: [id_ciclo], references: [id_ciclo])\n  docentes    Docente_Materia[]\n  estudiantes Estudiante_Materia[]\n}\n\nmodel Estudiante {\n  id_estudiante    Int      @id @default(autoincrement())\n  nombre           String\n  apellido         String\n  correo           String   @unique\n  password         String\n  fecha_nacimiento DateTime\n  id_carrera       Int\n\n  carrera  Carrera              @relation(fields: [id_carrera], references: [id_carrera])\n  materias Estudiante_Materia[]\n}\n\nmodel Docente {\n  id_docente   Int    @id @default(autoincrement())\n  nombre       String\n  apellido     String\n  correo       String @unique\n  especialidad String\n\n  materias Docente_Materia[]\n}\n\nmodel Docente_Materia {\n  id_docente Int\n  id_materia Int\n\n  docente Docente @relation(fields: [id_docente], references: [id_docente])\n  materia Materia @relation(fields: [id_materia], references: [id_materia])\n\n  @@id([id_docente, id_materia])\n}\n\nmodel Estudiante_Materia {\n  id_estudiante     Int\n  id_materia        Int\n  fecha_inscripcion DateTime\n\n  estudiante Estudiante @relation(fields: [id_estudiante], references: [id_estudiante])\n  materia    Materia    @relation(fields: [id_materia], references: [id_materia])\n\n  @@id([id_estudiante, id_materia])\n}\n",
+  "inlineSchemaHash": "6319da553019ab1249b2b7e2475d72d54a50c4fce5a8ee4bb814ceac95e7840b",
+  "copyEngine": true
 }
+config.dirname = '/'
 
 config.runtimeDataModel = JSON.parse("{\"models\":{\"Carrera\":{\"fields\":[{\"name\":\"id_carrera\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nombre\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"duracion\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"facultad\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ciclos\",\"kind\":\"object\",\"type\":\"Ciclo\",\"relationName\":\"CarreraToCiclo\"},{\"name\":\"estudiantes\",\"kind\":\"object\",\"type\":\"Estudiante\",\"relationName\":\"CarreraToEstudiante\"}],\"dbName\":null},\"Ciclo\":{\"fields\":[{\"name\":\"id_ciclo\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nombre\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"numero\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"id_carrera\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"carrera\",\"kind\":\"object\",\"type\":\"Carrera\",\"relationName\":\"CarreraToCiclo\"},{\"name\":\"materias\",\"kind\":\"object\",\"type\":\"Materia\",\"relationName\":\"CicloToMateria\"}],\"dbName\":null},\"Materia\":{\"fields\":[{\"name\":\"id_materia\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nombre\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"codigo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"creditos\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"id_ciclo\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"ciclo\",\"kind\":\"object\",\"type\":\"Ciclo\",\"relationName\":\"CicloToMateria\"},{\"name\":\"docentes\",\"kind\":\"object\",\"type\":\"Docente_Materia\",\"relationName\":\"Docente_MateriaToMateria\"},{\"name\":\"estudiantes\",\"kind\":\"object\",\"type\":\"Estudiante_Materia\",\"relationName\":\"Estudiante_MateriaToMateria\"}],\"dbName\":null},\"Estudiante\":{\"fields\":[{\"name\":\"id_estudiante\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nombre\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apellido\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"correo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fecha_nacimiento\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"id_carrera\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"carrera\",\"kind\":\"object\",\"type\":\"Carrera\",\"relationName\":\"CarreraToEstudiante\"},{\"name\":\"materias\",\"kind\":\"object\",\"type\":\"Estudiante_Materia\",\"relationName\":\"EstudianteToEstudiante_Materia\"}],\"dbName\":null},\"Docente\":{\"fields\":[{\"name\":\"id_docente\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nombre\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"apellido\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"correo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"especialidad\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"materias\",\"kind\":\"object\",\"type\":\"Docente_Materia\",\"relationName\":\"DocenteToDocente_Materia\"}],\"dbName\":null},\"Docente_Materia\":{\"fields\":[{\"name\":\"id_docente\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"id_materia\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"docente\",\"kind\":\"object\",\"type\":\"Docente\",\"relationName\":\"DocenteToDocente_Materia\"},{\"name\":\"materia\",\"kind\":\"object\",\"type\":\"Materia\",\"relationName\":\"Docente_MateriaToMateria\"}],\"dbName\":null},\"Estudiante_Materia\":{\"fields\":[{\"name\":\"id_estudiante\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"id_materia\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"fecha_inscripcion\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"estudiante\",\"kind\":\"object\",\"type\":\"Estudiante\",\"relationName\":\"EstudianteToEstudiante_Materia\"},{\"name\":\"materia\",\"kind\":\"object\",\"type\":\"Materia\",\"relationName\":\"Estudiante_MateriaToMateria\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
-config.compilerWasm = {
-  getRuntime: async () => require('./query_compiler_bg.js'),
-  getQueryCompilerWasmModule: async () => {
-    const loader = (await import('#wasm-compiler-loader')).default
-    const compiler = (await loader).default
-    return compiler
+config.engineWasm = {
+  getRuntime: async () => require('./query_engine_bg.js'),
+  getQueryEngineWasmModule: async () => {
+    const loader = (await import('#wasm-engine-loader')).default
+    const engine = (await loader).default
+    return engine
   }
 }
-if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || (typeof process !== 'undefined' && process.env && process.env.DEBUG) || undefined) {
-  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || (typeof process !== 'undefined' && process.env && process.env.DEBUG) || undefined)
+config.compilerWasm = undefined
+
+config.injectableEdgeEnv = () => ({
+  parsed: {
+    DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.DATABASE_URL || undefined
+  }
+})
+
+if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
+  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined)
 }
 
 const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
+
